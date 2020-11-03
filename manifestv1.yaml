@@ -1,0 +1,14 @@
+apiVersion : v1
+kind: Pod
+metadata:
+  name: goapp
+  labels:
+    env : prod
+    app : web
+    owner : TkEugen
+spec:
+  containers:
+    - name  : containers-go
+      image : nginx:latest
+      ports:
+        - containerPort: 80

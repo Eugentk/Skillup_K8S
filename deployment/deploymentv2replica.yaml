@@ -1,0 +1,23 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: web-replica
+  labels:
+    app: replica-apps
+    env: prod
+    owner: tkeugen
+spec:
+  replicas: 7
+  selector:
+    matchLabels:
+      project: main-replica
+  template:
+    metadata:
+      labels:
+        project: main-replica
+    spec:
+      containers:
+        - name: web
+          image:  eugentk/go-app:latest
+          ports:
+            - containerPort: 8888

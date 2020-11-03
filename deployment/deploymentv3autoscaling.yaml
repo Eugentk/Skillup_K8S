@@ -1,0 +1,45 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: web-autoscaling
+  labels:
+    app: autoscaling-apps
+    env: prod
+    owner: tkeugen
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      project: main-autoscaling
+  template:
+    metadata:
+      labels:
+        project: main-autoscaling
+    spec:
+      containers:
+        - name: web-autoscaling
+          image:  eugentk/go-app:latest
+          ports:
+            - containerPort: 8888
+
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: pod-autoscaling
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v2beta1v1
+    kind: Deployment
+    name: web-deployment-autoscaling
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      targetAverageUtilization: 75
+  - type: Resource
+    resource:
+      name: memory
+      targetAverageUtilization: 80
